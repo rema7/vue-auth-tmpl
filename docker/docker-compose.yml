@@ -1,0 +1,43 @@
+version: '3'
+services:
+  db:
+    container_name: vue_auth_db
+    image: postgres:11.1
+    hostname: db
+    environment:
+      POSTGRES_PASSWORD: 'db_pwd'
+      POSTGRES_USER: 'db_user'
+      PGDATA: '/data/pgdata'
+      POSTGRES_DB: 'vue_auth_db_docker'
+    volumes:
+      - ./dbdata:/data/pgdata:cached
+    ports:
+      - "6100:5432"
+  vue_auth_backend:
+    container_name: vue_auth_backend
+    environment:
+      DB_CONNECTION: postgresql+psycopg2://db_user:db_pwd@db/vue_auth_db_docker
+      WAIT_HOSTS: db:5432
+    build: backend
+    ports:
+      - "9000:8000"
+    volumes:
+      - ../.:/app
+      - ./repository:/repository:cached
+    depends_on:
+      - db
+  vue_auth_frontend:
+    container_name: vue_auth_frontend
+    build: frontend
+    ports:
+      - "9010:9010"
+    volumes:
+      - ../frontend:/app:cached
+  vue_auth_nginx:
+    container_name: vue_auth_nginx
+    build: nginx
+    ports:
+      - "8889:8889"
+    depends_on:
+      - vue_auth_backend
+      - vue_auth_frontend

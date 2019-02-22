@@ -1,0 +1,13 @@
+[Unit]
+Description=Rema.io
+Requires=docker.service
+After=network.target docker.service
+
+[Service]
+#Restart=always
+Type=simple
+ExecStart=/usr/local/bin/docker-compose -f /projects/rema.io/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /projects/rema.io/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target

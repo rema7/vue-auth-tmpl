@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+docker/dbdata/
+docker/repository/
+src/**/__pycache__/
+src/settings_local.py
+frontend/dist
+src/settings_local.py
+.DS_Store
